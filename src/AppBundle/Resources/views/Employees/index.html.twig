@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Employees list</h1>
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+    {{ form_end(form) }}
+    </br>
+    </br>
+    <div class="count">
+        Totals: {{ employees.getTotalItemCount }}
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>{{ knp_pagination_sortable(employees, 'Id', 'a.id') }}</th>
+                <th>Birthdate</th>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Gender</th>
+                <th>Hiredate</th>
+                <th>Department</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for employee in employees %}
+            <tr>
+                <td><a href="{{ path('employees_show', { 'id': employee.id }) }}">{{ employee.id }}</a></td>
+                <td>{% if employee.birthDate %}{{ employee.birthDate|date('Y-m-d') }}{% endif %}</td>
+                <td>{{ employee.firstName }}</td>
+                <td>{{ employee.lastName }}</td>
+                <td>{% if employee.gender %}Male{% else %}FeMale{% endif %}</td>
+                <td>{% if employee.hireDate %}{{ employee.hireDate|date('Y-m-d') }}{% endif %}</td>
+                <td>
+                    {% for dep in employee.departments %}
+                        {{ dep.deptName }}
+                    </br>
+                    {% endfor %}
+                </td>
+                <td>
+                    <ul>
+                        <li>
+                            <a href="{{ path('employees_show', { 'id': employee.id }) }}">show</a>
+                        </li>
+                        <li>
+                            <a href="{{ path('employees_edit', { 'id': employee.id }) }}">edit</a>
+                        </li>
+                    </ul>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    {# display navigation #}
+    <div class="navigation">
+        {{ knp_pagination_render(employees) }}
+    </div>
+
+    <ul>
+        <li>
+            <a href="{{ path('employees_new') }}">Create a new employee</a>
+        </li>
+    </ul>
+{% endblock %}
